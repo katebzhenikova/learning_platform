@@ -1,4 +1,5 @@
 from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
@@ -108,11 +109,13 @@ class TestViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class StudentAnswerViewSet(viewsets.ModelViewSet):
+    """Класс ответов студентов на тесты"""
     queryset = StudentAnswer.objects.all().order_by('id')  # Явный порядок
     serializer_class = StudentAnswerSerializer
     pagination_class = StudentAnswerPagination
 
     def get_permissions(self):
+        """Разрешения пользователей"""
         if self.request.method == 'POST':
             # Студенты могут создавать ответы
             return [IsStudent()]
@@ -123,11 +126,25 @@ class StudentAnswerViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def perform_create(self, serializer):
+        """Создание студентом ответов на тесты"""
         selected_answer_text = self.request.data.get('selected_answer')
         test = serializer.validated_data['test']
         correct_answer = AnswerOption.objects.filter(test=test, is_correct=True).first()
         is_correct = correct_answer and correct_answer.answer_text == selected_answer_text
-        serializer.save(is_correct=is_correct)
+        serializer.save(student=self.request.user, is_correct=is_correct)
+
+    @action(detail=False, methods=['get'])
+    def student_answers(self, request):
+        """Просмотр ответов студентов на тесты"""
+        material_id = request.query_params.get('material_id')
+
+        if not material_id:
+            return Response({'detail': 'material_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        student_id = request.user.id
+        answers = StudentAnswer.objects.filter(student_id=student_id, test_id=material_id)
+        serializer = self.get_serializer(answers, many=True)
+        return Response(serializer.data)
 
 
 

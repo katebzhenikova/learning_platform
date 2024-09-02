@@ -90,3 +90,37 @@ IsStudent, которое проверяет, что пользователь с
 Разрешения:
 IsTeacher: Проверяет, что текущий пользователь является владельцем объекта.
 IsStudent: Проверяет, что текущий пользователь состоит в группе "Студенты".
+
+
+Эндпойнты:
+learning_platform:
+GET http://localhost:8000/course/ - Получить список всех курсов
+POST http://localhost:8000/course/ - Создать новый курс
+GET http://localhost:8000/course/{id}/ - Получить информацию о конкретном курсе по его ID
+PUT http://localhost:8000/course/{id}/ - Обновить информацию о конкретном курсе по его ID
+PATCH http://localhost:8000/course/{id}/ - Частично обновить информацию о конкретном курсе по его ID
+DELETE http://localhost:8000/course/{id}/ - Удалить конкретный курс по его ID
+
+GET http://localhost:8000/materials/ - Получить список всех курсов
+POST http://localhost:8000/materials/create/ - Создать новый курс
+GET http://localhost:8000/materials/{id}/ - Получить информацию о конкретном курсе по его ID
+PUT http://localhost:8000/materials/{id}/ - Обновить информацию о конкретном курсе по его ID
+PATCH http://localhost:8000/materials/{id}/ - Частично обновить информацию о конкретном курсе по его ID
+DELETE http://localhost:8000/materials/{id}/ - Удалить конкретный курс по его ID
+
+POST http://localhost:8000/learning_platform/student_answers/ - Отправить ответ на тест
+GET http://localhost:8000/learning_platform/student_answers/?material_id={id} - Получить ответы студента
+
+users:
+GET http://localhost:8000/payment/ - Получить список всех платежей
+POST http://localhost:8000/payment/create/ - Создать новый платеж
+GET http://localhost:8000/payment/status/<payment_id>/ - Получить статус платежа по его ID
+POST http://localhost:8000/register/ - Регистрация нового пользователя
+POST http://localhost:8000/token/ - Получает JWT токен для аутентификации
+POST http://localhost:8000/token/refresh/ - Обновляет JWT токен
+
+Документация:
+http://127.0.0.1:8000/swagger/
+Django administration:
+http://127.0.0.1:8000/admin/
+

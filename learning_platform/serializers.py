@@ -37,3 +37,5 @@ class StudentAnswerSerializer(ModelSerializer):
     class Meta:
         model = StudentAnswer
         fields = ['id', 'student', 'test', 'selected_answer', 'is_correct', 'timestamp']
+        read_only_fields = ['student', 'is_correct']
+
