@@ -16,8 +16,9 @@ class Course(models.Model):
         **NULLABLE,
         verbose_name="владелец",
     )
-    pay_amount_course = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='стоимость курса')
-
+    pay_amount_course = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="стоимость курса"
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -73,7 +74,9 @@ class Test(models.Model):
 
 
 class AnswerOption(models.Model):
-    test = models.ForeignKey(Test, related_name='answer_options', on_delete=models.CASCADE)
+    test = models.ForeignKey(
+        Test, related_name="answer_options", on_delete=models.CASCADE
+    )
     answer_text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
     owner = models.ForeignKey(
@@ -104,7 +107,3 @@ class StudentAnswer(models.Model):
     class Meta:
         verbose_name = "Ответы студента"
         verbose_name_plural = "Ответы студента"
-
-
-
-

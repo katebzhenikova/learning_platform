@@ -2,19 +2,23 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
 from learning_platform.apps import LearningPlatformConfig
-from learning_platform.views import (CourseViewSet,
-                                     MaterialCreateAPIView,
-                                     MaterialDestroyAPIView,
-                                     MaterialListAPIView,
-                                     MaterialRetrieveAPIView,
-                                     MaterialUpdateAPIView, TestViewSet, StudentAnswerViewSet, )
+from learning_platform.views import (
+    CourseViewSet,
+    MaterialCreateAPIView,
+    MaterialDestroyAPIView,
+    MaterialListAPIView,
+    MaterialRetrieveAPIView,
+    MaterialUpdateAPIView,
+    TestViewSet,
+    StudentAnswerViewSet, CheckAnswersView,
+)
 
 app_name = LearningPlatformConfig.name
 
 router = DefaultRouter()
-router.register(r'course', CourseViewSet, basename='course')
-router.register(r'tests', TestViewSet, basename='test')
-router.register(r'student_answers', StudentAnswerViewSet, basename='student-answer')
+router.register(r"course", CourseViewSet, basename="course")
+router.register(r"tests", TestViewSet, basename="test")
+router.register(r"student_answers", StudentAnswerViewSet, basename="student-answer")
 
 urlpatterns = [
     path("materials/", MaterialListAPIView.as_view(), name="materials-list"),
@@ -32,6 +36,7 @@ urlpatterns = [
         MaterialDestroyAPIView.as_view(),
         name="materials-delete",
     ),
+    path('check-answers/', CheckAnswersView.as_view(), name='check-answers'),
 
 ]
 

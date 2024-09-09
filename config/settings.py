@@ -130,8 +130,8 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://read-only.example.com",
-    "https://read-and-write.example.com",
+    "https://learninig_platform.com",
+    "https://api.learninig_platform.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -169,26 +169,27 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 #         'schedule': timedelta(days=1),  # Расписание выполнения задачи (например, каждые 10 минут)
 #     },
 # }
+LOGGING_FILE = os.path.join(BASE_DIR, 'logs/django.log')
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': LOGGING_FILE,
         },
-        "mail_admins": {
-            "level": "ERROR",
-            "class": "django.utils.log.AdminEmailHandler",
-            "include_html": True,  # Включить HTML в сообщении (если нужно)
+        'console': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
         },
     },
-    "loggers": {
-        "django": {
-            "handlers": ["console", "mail_admins"],
-            "level": "INFO",
-            "propagate": True,
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'WARNING',
+            'propagate': True,
         },
     },
 }

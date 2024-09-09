@@ -2,7 +2,7 @@
 
 Этот проект представляет собой приложение на Django с использованием Django REST Framework (DRF), 
 Оно включает несколько сервисов, таких как Django, PostgreSQL, 
-Redis и Celery.
+Redis и Celery, Stripe
 
 Содержание
 
@@ -16,7 +16,7 @@ learning_platform/
 │─ requirements.txt       # Зависимости Python
 │─ ...                    # Другие файлы, связанные с Django
 │─ .env                   # Файл с переменными окружения
-└─ README.md              # Документация проекта
+└─ README.md              # Описание проекта
 
 Сервисы
 
@@ -24,6 +24,7 @@ learning_platform/
 2. PostgreSQL: Реляционная база данных.
 3. Redis: Хранилище структур данных в памяти, используемое в качестве брокера сообщений для Celery.
 4. Celery: Асинхронная очередь задач.
+5. Stripe: Платформа для обработки онлайн-платежей
 
 Переменные окружения
 Проект использует файл .env для управления переменными окружения. 
@@ -31,9 +32,8 @@ learning_platform/
 
 Запуск проекта
 1. Django: Запустите сервер Django командой:
-
 python manage.py runserver
-Проект будет доступен по адресу http://localhost:8000/.
+Проект будет доступен по адресу http://127.0.0.1:8000/.
 
 2. PostgreSQL: Загрузите фикстуры данных:
 
@@ -57,7 +57,7 @@ celery -A config worker -l INFO -P eventlet
 
 Задачи в фоновом режиме
 Функция send_update_notification предназначена для отправки 
-уведомлений по электронной почте об обновлениях курса. 
+уведомлений по электронной почте об обновлениях материалов курса. 
 Функция запускается асинхронно через Celery.
 
 Сохранение результатов проверки покрытия тестами.
@@ -94,30 +94,31 @@ IsStudent: Проверяет, что текущий пользователь с
 
 Эндпойнты:
 learning_platform:
-GET http://localhost:8000/course/ - Получить список всех курсов
-POST http://localhost:8000/course/ - Создать новый курс
-GET http://localhost:8000/course/{id}/ - Получить информацию о конкретном курсе по его ID
-PUT http://localhost:8000/course/{id}/ - Обновить информацию о конкретном курсе по его ID
-PATCH http://localhost:8000/course/{id}/ - Частично обновить информацию о конкретном курсе по его ID
-DELETE http://localhost:8000/course/{id}/ - Удалить конкретный курс по его ID
+GET http://localhost:8000/learning_platform/course/ - Получить список всех курсов
+POST http://localhost:8000/learning_platform/course/ - Создать новый курс
+PUT http://localhost:8000/learning_platform/course/{id}/ - Обновить информацию о конкретном курсе по его ID
+PATCH http://localhost:8000/learning_platform/course/{id}/ - Частично обновить информацию о конкретном курсе по его ID
+DELETE http://localhost:8000/learning_platform/course/{id}/ - Удалить конкретный курс по его ID
 
-GET http://localhost:8000/materials/ - Получить список всех курсов
-POST http://localhost:8000/materials/create/ - Создать новый курс
-GET http://localhost:8000/materials/{id}/ - Получить информацию о конкретном курсе по его ID
-PUT http://localhost:8000/materials/{id}/ - Обновить информацию о конкретном курсе по его ID
-PATCH http://localhost:8000/materials/{id}/ - Частично обновить информацию о конкретном курсе по его ID
-DELETE http://localhost:8000/materials/{id}/ - Удалить конкретный курс по его ID
+GET http://localhost:8000/learning_platform/materials/ - Получить список всех обучающих материалов
+POST http://localhost:8000/learning_platform/materials/create/ - Создать новый обучающий материал
+GET http://localhost:8000/learning_platform/materials/{id}/ - Получить информацию о конкретном материале по его ID
+PUT http://localhost:8000/learning_platform/materials/{id}/ - Обновить информацию о конкретном материале по его ID
+PATCH http://localhost:8000/learning_platform/materials/{id}/ - Частично обновить информацию о конкретном материале по его ID
+DELETE http://localhost:8000/learning_platform/materials/{id}/ - Удалить конкретный материал по его ID
 
+GET http://localhost:8000/learning_platform/tests/?material_id={id} - Получить тесты на обучающие материалы
 POST http://localhost:8000/learning_platform/student_answers/ - Отправить ответ на тест
-GET http://localhost:8000/learning_platform/student_answers/?material_id={id} - Получить ответы студента
+GET http://localhost:8000/learning_platform/check-answers/?material_id={id} - Получить ответы студента
 
 users:
-GET http://localhost:8000/payment/ - Получить список всех платежей
-POST http://localhost:8000/payment/create/ - Создать новый платеж
-GET http://localhost:8000/payment/status/<payment_id>/ - Получить статус платежа по его ID
-POST http://localhost:8000/register/ - Регистрация нового пользователя
-POST http://localhost:8000/token/ - Получает JWT токен для аутентификации
-POST http://localhost:8000/token/refresh/ - Обновляет JWT токен
+GET http://localhost:8000/users/payment/ - Получить список всех платежей
+POST http://localhost:8000/users/payment/create/ - Создать новый платеж
+GET http://localhost:8000/users/payment/status/<payment_id>/ - Получить статус платежа по его ID
+POST http://localhost:8000/users/subscription/update/<int:payment_id>/ - Получить подписку по ID оплаты
+POST http://localhost:8000/users/register/ - Регистрация нового пользователя
+POST http://localhost:8000/users/token/ - Получает JWT токен для аутентификации
+POST http://localhost:8000/users/token/refresh/ - Обновляет JWT токен
 
 Документация:
 http://127.0.0.1:8000/swagger/
